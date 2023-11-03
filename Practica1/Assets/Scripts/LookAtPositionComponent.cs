@@ -23,7 +23,6 @@ public class LookAtPositionComponent : MonoBehaviour
     {
         _myTransform = transform;
     }
-
     void Update()
     {
         Quaternion rotation = Quaternion.LookRotation(_lookAtPosition - transform.position, transform.TransformDirection(Vector3.up));

@@ -4,21 +4,16 @@ using UnityEngine;
 public class ReboundComponent : MonoBehaviour
 {
     #region methods
-    /// <summary>
-    /// This method detects if the collided object is a bullet. Use duck typing!
-    /// If it is a bullet, the movement direction is set to fake a rebound on the surface:
-    /// Normal, tangent, dot product and cross product will be required to accomplish this
-    /// </summary>
-    /// <param name="collision"></param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.GetComponent<BulletMovement>() != null)
         {
-            
             Vector3 oldDirection = collision.gameObject.GetComponent<BulletMovement>().Speed;
-            Debug.Log(collision.GetContact(0).normal);
+            Vector3 normal = collision.GetContact(0).normal;
+            // Por el método del paralelogramo:
+            Vector3 newDirection = (oldDirection - 2 * (Vector3.Dot(oldDirection, normal) * normal)).normalized;
+            collision.gameObject.GetComponent<BulletMovement>().SetDirection(newDirection);
         }
-        
     }
     #endregion
 }
