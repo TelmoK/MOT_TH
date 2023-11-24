@@ -52,10 +52,7 @@ public class CameraController : MonoBehaviour
     /// <param name="verticalFollowEnabled"></param>
     public void SetVerticalFollow(bool verticalFollowEnabled)
     {
-        //TODO
-        verticalFollowEnabled = true;
-        // _yFollowEnabled = verticalFollowEnabled;
-        // Character o Manager llama if, o no, grounded: SetVerticalFollow(bool)
+        _yFollowEnabled = verticalFollowEnabled; //llama character
     }
     #endregion
     /// <summary>
@@ -64,10 +61,11 @@ public class CameraController : MonoBehaviour
     /// </summary>
     void Start()
     {
-        //TODO
         _myTransform = transform;
-        _targetTransform = transform;
-        // _yPreviousFrameValue = INITIAL SETUP VALUE(_targetTransform, _horizontalOffset, _verticalOffset);
+        _myTransform.LookAt(_targetTransform);
+        _myTransform.position = _targetTransform.position - _horizontalOffset*Vector3.forward + _verticalOffset*Vector3.up;
+
+        _yPreviousFrameValue = _myTransform.position.z;
     }
     /// <summary>
     /// LATE UPDATE
@@ -77,17 +75,16 @@ public class CameraController : MonoBehaviour
     /// </summary>
     void LateUpdate()
     {
-        // COMPONENTE Y DE LA CAMERA
         if (_yFollowEnabled)
         {
-
             _myTransform.position = Vector3.Lerp(_myTransform.position, _targetTransform.position, _followFactor * Time.deltaTime);
         }
         else
         {
-            Vector3 _previousVector = new Vector3(_myTransform.position.x, _yPreviousFrameValue, _myTransform.position.z);
-            _myTransform.position = Vector3.Lerp(_previousVector, _targetTransform.position, _followFactor * Time.deltaTime);
+            _myTransform.position = Vector3.Lerp(new Vector3(_myTransform.position.x, _myTransform.position.y, _yPreviousFrameValue), _targetTransform.position, Time.deltaTime * _followFactor);
         }
+        _myTransform.LookAt(_targetTransform);
+
 
     }
 

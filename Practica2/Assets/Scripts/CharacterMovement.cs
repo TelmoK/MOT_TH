@@ -79,8 +79,12 @@ public class CharacterMovement : MonoBehaviour
     /// </summary>
      public void Jump()
      {
-        //TODO
-        Debug.Log("Jumped");
+        if (_myCharacterController.isGrounded)
+        {
+            _verticalSpeed = _jumpSpeed;
+            Debug.Log("Jumped");
+        }
+
      }
 
     #endregion
@@ -118,6 +122,12 @@ public class CharacterMovement : MonoBehaviour
     /// </summary>
     void Update()
     {
-        _myCharacterController.SimpleMove(new Vector3(_xAxis, 0, _zAxis) * _movementSpeed);
+        _movementDirection = new Vector3(_xAxis, 0, _zAxis).normalized;
+
+        _verticalSpeed += Physics.gravity.y * Time.deltaTime;
+        if(_verticalSpeed < _minSpeed) _verticalSpeed = _minSpeed;
+
+        _myCharacterController.Move((_movementDirection * _movementSpeed + new Vector3(0,_verticalSpeed,0)) * Time.deltaTime);
+
     }
 }
