@@ -13,7 +13,7 @@ public class CharacterMovement : MonoBehaviour
     /// Vertical speed assigned to character when jump starts
     /// </summary>
     [SerializeField]
-    private float _jumpSpeed = 20.0f;
+    private float _jumpSpeed = 5.0f;
     /// <summary>
     /// Minimum vertical speed to limitate falling speed
     /// </summary>
@@ -82,9 +82,7 @@ public class CharacterMovement : MonoBehaviour
         if (_myCharacterController.isGrounded)
         {
             _verticalSpeed = _jumpSpeed;
-            Debug.Log("Jumped");
         }
-
      }
 
     #endregion
@@ -95,6 +93,8 @@ public class CharacterMovement : MonoBehaviour
     /// </summary>
     void Start()
     {
+        _myTransform = transform;
+
         // Programación defensiva
         _myCharacterController = GetComponent<CharacterController>();
         if (_myCharacterController == null)
@@ -107,9 +107,7 @@ public class CharacterMovement : MonoBehaviour
         if (_cameraController == null)
         {
             Debug.LogError("CameraController not found in the scene.");
-        }
-    
-        _myTransform = transform;
+        }    
     }
     /// <summary>
     /// UPDATE
@@ -122,12 +120,35 @@ public class CharacterMovement : MonoBehaviour
     /// </summary>
     void Update()
     {
-        _movementDirection = new Vector3(_xAxis, 0, _zAxis).normalized;
+        // Set movementDirection
+        _movementDirection = new Vector3(_xAxis, 0.0f, _zAxis).normalized;
 
-        _verticalSpeed += Physics.gravity.y * Time.deltaTime;
-        if(_verticalSpeed < _minSpeed) _verticalSpeed = _minSpeed;
+        // 1 - Sólo si el character está en el aire que se calculan los cambios en la velocidad vertical
+        // 2 - Set el follow vertical de la camera si el character está en el suelo
+        if (!_myCharacterController.isGrounded)
+        {
+            if (_verticalSpeed == 0) 
+            {
+                _verticalSpeed = _minSpeed;
+            }
+            //_verticalSpeed = Mathf.Clamp(_verticalSpeed, _minSpeed, _jumpSpeed);
+            _verticalSpeed += Physics.gravity.y * Time.deltaTime;
 
-        _myCharacterController.Move((_movementDirection * _movementSpeed + new Vector3(0,_verticalSpeed,0)) * Time.deltaTime);
+            _cameraController.SetVerticalFollow(false);
+        }
+        else
+        {
+            _cameraController.SetVerticalFollow(true);
+        }
 
+        // Movimiento en el plano
+        _myCharacterController.Move((_movementDirection * _movementSpeed + new Vector3(0.0f, _verticalSpeed, 0.0f)) * Time.deltaTime);
+
+        // Sólo hay cambios de dirección si el vector _movementDirection no es (0, 0, 0), lo que impide calculos desnecesarios y comportamientos aleatórios y inesperados.
+        if (_movementDirection != Vector3.zero) 
+        {
+            Quaternion rotation = Quaternion.LookRotation(_movementDirection, Vector3.up);
+            _myTransform.rotation = rotation;
+        }
     }
 }

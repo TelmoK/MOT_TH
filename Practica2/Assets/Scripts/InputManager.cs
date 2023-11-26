@@ -32,20 +32,6 @@ public class InputManager : MonoBehaviour
     /// </summary>
     void Update()
     {
-        //if (Input.GetKey(KeyCode.D))
-        //{
-        //    _playerCharacterMovement.SetHorizontalInput(1);
-        //}
-        //else if (Input.GetKey(KeyCode.A)) _playerCharacterMovement.SetHorizontalInput(-1);
-        //else _playerCharacterMovement.SetHorizontalInput(0);
-
-        //if (Input.GetKey(KeyCode.W))
-        //{
-        //    _playerCharacterMovement.SetVerticalInput(1);
-        //}
-        //else if (Input.GetKey(KeyCode.S)) _playerCharacterMovement.SetVerticalInput(-1);
-        //else _playerCharacterMovement.SetVerticalInput(0);
-
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         _playerCharacterMovement.SetHorizontalInput(horizontalInput);
 

@@ -9,12 +9,12 @@ public class CameraController : MonoBehaviour
     /// Horizonal distance from Camera to CameraTarget.
     /// </summary>
     [SerializeField]
-    private float _horizontalOffset = 1.0f;
+    private float _horizontalOffset = 5.0f;
     /// <summary>
     /// Vertical distance from Camera to CameraTarget.
     /// </summary>
     [SerializeField]
-    private float _verticalOffset = 1.0f;
+    private float _verticalOffset = 2.0f;
     /// <summary>
     /// Multiplier factor to regulate camera responsiveness to target's movement.
     /// </summary>
@@ -52,20 +52,21 @@ public class CameraController : MonoBehaviour
     /// <param name="verticalFollowEnabled"></param>
     public void SetVerticalFollow(bool verticalFollowEnabled)
     {
-        _yFollowEnabled = verticalFollowEnabled; //llama character
+        _yFollowEnabled = verticalFollowEnabled;
     }
     #endregion
+
     /// <summary>
     /// START
     /// Needs to assign _myTransform and initialize _yPreviousFrameValue
     /// </summary>
     void Start()
     {
-        _myTransform = transform;
-        _myTransform.LookAt(_targetTransform);
+        _myTransform = transform;        
         _myTransform.position = _targetTransform.position - _horizontalOffset*Vector3.forward + _verticalOffset*Vector3.up;
+        _myTransform.LookAt(_targetTransform);
 
-        _yPreviousFrameValue = _myTransform.position.z;
+        _yPreviousFrameValue = _myTransform.position.y;
     }
     /// <summary>
     /// LATE UPDATE
@@ -75,17 +76,19 @@ public class CameraController : MonoBehaviour
     /// </summary>
     void LateUpdate()
     {
+
+        Vector3 targetPosition = _targetTransform.position - _horizontalOffset * Vector3.forward + _verticalOffset * Vector3.up;
         if (_yFollowEnabled)
         {
-            _myTransform.position = Vector3.Lerp(_myTransform.position, _targetTransform.position, _followFactor * Time.deltaTime);
+            _yPreviousFrameValue = targetPosition.y;  // Atualiza o valor de Y anterior
+            _myTransform.position = Vector3.Lerp(_myTransform.position, targetPosition, _followFactor * Time.deltaTime);
         }
         else
         {
-            _myTransform.position = Vector3.Lerp(new Vector3(_myTransform.position.x, _myTransform.position.y, _yPreviousFrameValue), _targetTransform.position, Time.deltaTime * _followFactor);
+            // Mantém a posição Y atual da câmera quando o acompanhamento vertical está desativado
+            targetPosition.y = _yPreviousFrameValue;
+            _myTransform.position = Vector3.Lerp(_myTransform.position, targetPosition, Time.deltaTime * _followFactor);
         }
         _myTransform.LookAt(_targetTransform);
-
-
     }
-
 }
