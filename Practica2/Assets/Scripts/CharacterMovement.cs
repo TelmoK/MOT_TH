@@ -13,7 +13,7 @@ public class CharacterMovement : MonoBehaviour
     /// Vertical speed assigned to character when jump starts
     /// </summary>
     [SerializeField]
-    private float _jumpSpeed = 5.0f;
+    private float _jumpSpeed = 8.0f;
     /// <summary>
     /// Minimum vertical speed to limitate falling speed
     /// </summary>

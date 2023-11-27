@@ -9,17 +9,17 @@ public class CameraController : MonoBehaviour
     /// Horizonal distance from Camera to CameraTarget.
     /// </summary>
     [SerializeField]
-    private float _horizontalOffset = 6.0f;
+    private float _horizontalOffset = 12.0f;
     /// <summary>
     /// Vertical distance from Camera to CameraTarget.
     /// </summary>
     [SerializeField]
-    private float _verticalOffset = 3.0f;
+    private float _verticalOffset = 5.0f;
     /// <summary>
     /// Multiplier factor to regulate camera responsiveness to target's movement.
     /// </summary>
     [SerializeField]
-    private float _followFactor = 5.0f;
+    private float _followFactor = 3.0f;
     #endregion
 
     #region references
@@ -62,13 +62,15 @@ public class CameraController : MonoBehaviour
     /// </summary>
     void Start()
     {
-        _myTransform = transform;
-        
-        _myTransform.position = _targetTransform.position - _horizontalOffset * Vector3.forward + _verticalOffset * Vector3.up;
-
-        _myTransform.LookAt(_targetTransform);
+        _myTransform = transform;       
 
         _yPreviousFrameValue = _targetTransform.position.y;
+
+        // ??????????????????????????????????? Necesita?
+        _myTransform.position = _targetTransform.position - _horizontalOffset * Vector3.forward + _verticalOffset * Vector3.up;
+
+        // ??????????????????????????????????? Necesita?
+        _myTransform.LookAt(_targetTransform);
     }
     /// <summary>
     /// LATE UPDATE
@@ -78,15 +80,19 @@ public class CameraController : MonoBehaviour
     /// </summary>
     void LateUpdate()
     {
-        Vector3 targetPosition = new Vector3(_targetTransform.position.x, _yPreviousFrameValue, _targetTransform.position.z) - _horizontalOffset * Vector3.forward + _verticalOffset * Vector3.up;
-
+        // If following, almacena el valor Y de la posición
         if (_yFollowEnabled)
         {
             _yPreviousFrameValue = _targetTransform.position.y;
         }
+        
+        // Posición target de la cámara
+        Vector3 targetPosition = new Vector3(_targetTransform.position.x, _yPreviousFrameValue, _targetTransform.position.z) - _horizontalOffset * Vector3.forward + _verticalOffset * Vector3.up;
 
+        // Desplazamiento de la cámara hasta la posición target
         _myTransform.position = Vector3.Lerp(_myTransform.position, targetPosition, _followFactor * Time.deltaTime);
 
+        // La cámara mira el player
         _myTransform.LookAt(_targetTransform);
     }
 }
