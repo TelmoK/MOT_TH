@@ -103,7 +103,7 @@ public class CharacterMovement : MonoBehaviour
         }
 
         // Programación defensiva
-        _cameraController = FindObjectOfType<CameraController>();
+        _cameraController = Camera.main.GetComponent<CameraController>();
         if (_cameraController == null)
         {
             Debug.LogError("CameraController not found in the scene.");
@@ -123,32 +123,29 @@ public class CharacterMovement : MonoBehaviour
         // Set movementDirection
         _movementDirection = new Vector3(_xAxis, 0.0f, _zAxis).normalized;
 
-        // 1 - Sólo si el character está en el aire que se calculan los cambios en la velocidad vertical
-        // 2 - Set el follow vertical de la camera si el character está en el suelo
-        if (!_myCharacterController.isGrounded)
-        {
-            if (_verticalSpeed == 0) 
-            {
-                _verticalSpeed = _minSpeed;
-            }
-            //_verticalSpeed = Mathf.Clamp(_verticalSpeed, _minSpeed, _jumpSpeed);
-            _verticalSpeed += Physics.gravity.y * Time.deltaTime;
+        _verticalSpeed += Physics.gravity.y * Time.deltaTime;
 
-            _cameraController.SetVerticalFollow(false);
-        }
-        else
+        // Límites inferior y superior de la velocidad vertical
+        _verticalSpeed = Mathf.Clamp(_verticalSpeed, _minSpeed, _jumpSpeed);
+
+        // Movimiento en el plano ANTES de SetVerticalFollow
+        _myCharacterController.Move((_movementDirection * _movementSpeed + Vector3.up * _verticalSpeed) * Time.deltaTime);
+
+        if (_myCharacterController.isGrounded)
         {
             _cameraController.SetVerticalFollow(true);
         }
-
-        // Movimiento en el plano
-        _myCharacterController.Move((_movementDirection * _movementSpeed + new Vector3(0.0f, _verticalSpeed, 0.0f)) * Time.deltaTime);
+        else
+        {
+            _cameraController.SetVerticalFollow(false);
+        }
 
         // Sólo hay cambios de dirección si el vector _movementDirection no es (0, 0, 0), lo que impide calculos desnecesarios y comportamientos aleatórios y inesperados.
+        // Slerp sirve para dejar la rotación smooth
         if (_movementDirection != Vector3.zero) 
         {
-            Quaternion rotation = Quaternion.LookRotation(_movementDirection, Vector3.up);
-            _myTransform.rotation = rotation;
+            Quaternion targetRotation = Quaternion.LookRotation(_movementDirection, Vector3.up);
+            _myTransform.rotation = Quaternion.Slerp(_myTransform.rotation, targetRotation, 15.0f * Time.deltaTime);
         }
     }
 }
