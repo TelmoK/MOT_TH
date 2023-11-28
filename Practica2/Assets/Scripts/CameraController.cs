@@ -69,7 +69,6 @@ public class CameraController : MonoBehaviour
         // ??????????????????????????????????? Necesita?
         _myTransform.position = _targetTransform.position - _horizontalOffset * Vector3.forward + _verticalOffset * Vector3.up;
 
-        // ??????????????????????????????????? Necesita?
         _myTransform.LookAt(_targetTransform);
     }
     /// <summary>
@@ -91,8 +90,5 @@ public class CameraController : MonoBehaviour
 
         // Desplazamiento de la cámara hasta la posición target
         _myTransform.position = Vector3.Lerp(_myTransform.position, targetPosition, _followFactor * Time.deltaTime);
-
-        // La cámara mira el player
-        _myTransform.LookAt(_targetTransform);
     }
 }

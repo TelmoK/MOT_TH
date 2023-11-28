@@ -519,6 +519,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1397779254}
   - component: {fileID: 1397779255}
+  - component: {fileID: 1397779256}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -554,6 +555,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerCharacterMovement: {fileID: 1065930559}
+--- !u!114 &1397779256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1397779253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb0e4dd04a343894199dfc6aa6268c22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1660828721
 PrefabInstance:
   m_ObjectHideFlags: 0
