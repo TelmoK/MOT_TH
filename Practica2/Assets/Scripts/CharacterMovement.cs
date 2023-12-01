@@ -130,7 +130,7 @@ public class CharacterMovement : MonoBehaviour
 
         // Movimiento en el plano ANTES de SetVerticalFollow
         _myCharacterController.Move((_movementDirection * _movementSpeed + Vector3.up * _verticalSpeed) * Time.deltaTime);
-
+        
         if (_myCharacterController.isGrounded)
         {
             _cameraController.SetVerticalFollow(true);
@@ -140,12 +140,11 @@ public class CharacterMovement : MonoBehaviour
             _cameraController.SetVerticalFollow(false);
         }
 
-        // Sólo hay cambios de dirección si el vector _movementDirection no es (0, 0, 0), lo que impide calculos desnecesarios y comportamientos aleatórios y inesperados.
-        // Slerp sirve para dejar la rotación smooth
+        // Solo hay cambios de dirección si el vector _movementDirection no es (0, 0, 0), lo que impide calculos inecesarios y comportamientos aleatórios y inesperados.
         if (_movementDirection != Vector3.zero) 
         {
-            Quaternion targetRotation = Quaternion.LookRotation(_movementDirection, Vector3.up);
-            _myTransform.rotation = Quaternion.Slerp(_myTransform.rotation, targetRotation, 15.0f * Time.deltaTime);
+            _myTransform.rotation = Quaternion.LookRotation(_movementDirection, Vector3.up);
         }
+        Debug.Log("IN MOVE " + _myCharacterController.velocity);
     }
 }
