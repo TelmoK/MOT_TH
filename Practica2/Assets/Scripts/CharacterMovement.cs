@@ -13,7 +13,7 @@ public class CharacterMovement : MonoBehaviour
     /// Vertical speed assigned to character when jump starts
     /// </summary>
     [SerializeField]
-    private float _jumpSpeed = 8.0f;
+    private float _jumpSpeed = 7.0f;
     /// <summary>
     /// Minimum vertical speed to limitate falling speed
     /// </summary>
@@ -140,11 +140,9 @@ public class CharacterMovement : MonoBehaviour
             _cameraController.SetVerticalFollow(false);
         }
 
-        // Solo hay cambios de dirección si el vector _movementDirection no es (0, 0, 0), lo que impide calculos inecesarios y comportamientos aleatórios y inesperados.
         if (_movementDirection != Vector3.zero) 
         {
             _myTransform.rotation = Quaternion.LookRotation(_movementDirection, Vector3.up);
         }
-        Debug.Log("IN MOVE " + _myCharacterController.velocity);
     }
 }

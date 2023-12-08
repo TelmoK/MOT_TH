@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
     /// Horizonal distance from Camera to CameraTarget.
     /// </summary>
     [SerializeField]
-    private float _horizontalOffset = 12.0f;
+    private float _horizontalOffset = 8.0f;
     /// <summary>
     /// Vertical distance from Camera to CameraTarget.
     /// </summary>
@@ -66,7 +66,6 @@ public class CameraController : MonoBehaviour
 
         _yPreviousFrameValue = _targetTransform.position.y;
 
-        // ??????????????????????????????????? Necesita?
         _myTransform.position = _targetTransform.position - _horizontalOffset * Vector3.forward + _verticalOffset * Vector3.up;
 
         _myTransform.LookAt(_targetTransform);

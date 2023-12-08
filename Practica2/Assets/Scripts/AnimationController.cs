@@ -24,19 +24,25 @@ public class AnimationComponent : MonoBehaviour
     /// </summary>
     void Start()
     {
-        // Programación defensiva
+
         _myCharacterController = GetComponent<CharacterController>();
         if (_myCharacterController == null)
         {
             Debug.LogError("CharacterController not found on the GameObject.");
         }
-        // Programación defensiva
+
         _myAnimator = GetComponent<Animator>();
         if (_myCharacterController == null)
         {
             Debug.LogError("Animator not found on the GameObject.");
         }
+
+        if (!_myAnimator || !_myCharacterController)
+        {
+            enabled = false;
+        }
     }
+
     /// <summary>
     /// UPDATE
     /// Evaluate _myCharacterController velocity
@@ -44,28 +50,21 @@ public class AnimationComponent : MonoBehaviour
     /// </summary>
     void Update()
     {
-        Vector3 chVelocity = _myCharacterController.velocity;
-        Debug.Log("IN ANIM "+ chVelocity); // PROBLEMA: La velocidad siempre es (0,0,0) NO SE CUMPLEN LOS CONDICIONALES
 
-        if (_myCharacterController.isGrounded && Mathf.Approximately(chVelocity.magnitude, 0.0f))
+        if (Mathf.Abs(_myCharacterController.velocity.y) > 0.1f)
         {
-            Debug.Log("IDLE");
-            _myAnimator.SetInteger("AnimState", 0);
-        }
-        else if(_myCharacterController.isGrounded && chVelocity.y > 0)
+            //jump
+           _myAnimator.SetInteger("AnimState", 2);
+        }        
+        else if (_myCharacterController.isGrounded && _myCharacterController.velocity.magnitude > 0.1f)
         {
-            Debug.Log("JUMP");
-            _myAnimator.SetInteger("AnimState", 2);
-        }
-        else if(!_myCharacterController.isGrounded && chVelocity.y < 0)
-        {
-            Debug.Log("FALL");
-            _myAnimator.SetInteger("AnimState", 3);
-        }
-        else if(_myCharacterController.isGrounded && (chVelocity.x != 0f || chVelocity.z != 0f))
-        {
-            Debug.Log("RUN");
+            //move
             _myAnimator.SetInteger("AnimState", 1);
+        }
+        else if (_myCharacterController.isGrounded)
+        {
+            //idle
+            _myAnimator.SetInteger("AnimState", 0);
         }
     }
 }
